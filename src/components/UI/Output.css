@@ -1,0 +1,15 @@
+.output-container {
+  margin: var(--spacing-xs) 0 var(--spacing-md) 25px;
+  padding: var(--spacing-sm);
+  background: rgba(0, 255, 65, 0.02);
+  border-left: 2px solid var(--border-color);
+  border-radius: 0 var(--border-radius) var(--border-radius) 0;
+}
+
+.output-text {
+  color: var(--text-secondary);
+  white-space: pre-wrap;
+  font-size: var(--font-size-sm);
+  line-height: 1.6;
+  margin: 0;
+}

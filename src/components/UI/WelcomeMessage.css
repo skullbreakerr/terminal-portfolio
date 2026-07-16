@@ -1,0 +1,32 @@
+.welcome-message {
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-lg);
+}
+
+.ascii-art {
+  font-size: 10px;
+  line-height: 1.2;
+  color: var(--text-primary);
+  text-shadow: 0 0 10px var(--glow-color);
+  margin-bottom: var(--spacing-md);
+}
+
+.welcome-text {
+  color: var(--text-secondary);
+  font-size: var(--font-size-md);
+  line-height: 1.8;
+}
+
+.highlight {
+  color: var(--text-primary);
+  background: rgba(0, 255, 65, 0.1);
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-weight: bold;
+}
+
+@media (max-width: 768px) {
+  .ascii-art {
+    font-size: 6px;
+  }
+}

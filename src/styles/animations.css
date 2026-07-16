@@ -1,0 +1,51 @@
+/* Fade In Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Typing Cursor Animation */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* Glitch Effect */
+@keyframes glitch {
+  0% { transform: translate(0); }
+  20% { transform: translate(-2px, 2px); }
+  40% { transform: translate(-2px, -2px); }
+  60% { transform: translate(2px, 2px); }
+  80% { transform: translate(2px, -2px); }
+  100% { transform: translate(0); }
+}
+
+/* Pulse Glow */
+@keyframes pulseGlow {
+  0%, 100% { text-shadow: 0 0 5px var(--glow-color); }
+  50% { text-shadow: 0 0 20px var(--glow-color), 0 0 40px var(--glow-color); }
+}
+
+/* Matrix Rain Effect */
+@keyframes matrixRain {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.cursor-blink {
+  animation: blink 1s infinite;
+}
+
+.glitch-hover:hover {
+  animation: glitch 0.3s ease-in-out;
+}
