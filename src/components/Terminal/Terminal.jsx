@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import TerminalHeader from './TerminalHeader';
 import TerminalInput from './TerminalInput';
 import WelcomeMessage from '../UI/WelcomeMessage';
@@ -25,7 +25,7 @@ const Terminal = () => {
     addCommandToHistory
   } = useTerminal(fileSystem);
   
-  const { getNode, isDirectory, getChildren } = useFileSystem(fileSystem);
+//   const { getNode, isDirectory, getChildren } = useFileSystem(fileSystem);
   
   const commands = createCommands(
     fileSystem,
