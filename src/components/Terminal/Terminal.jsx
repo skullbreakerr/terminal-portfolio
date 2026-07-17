@@ -4,7 +4,7 @@ import TerminalInput from './TerminalInput';
 import WelcomeMessage from '../UI/WelcomeMessage';
 import Output from '../UI/Output';
 import { useTerminal } from '../../hooks/useTerminal';
-import { useFileSystem } from '../../hooks/useFileSystem';
+// import { useFileSystem } from '../../hooks/useFileSystem';
 import { createFileSystem } from '../../data/fileSystem';
 import { portfolioData } from '../../data/portfolio';
 import { createCommands } from '../FileSystem/commands';
