@@ -21,6 +21,7 @@ const Terminal = () => {
     setCurrentDir,
     inputRef,
     navigateUp,
+    commandHistory,
     navigateDown,
     addCommandToHistory
   } = useTerminal(fileSystem);
@@ -41,6 +42,7 @@ const Terminal = () => {
     if (!command) return;
     
     addCommandToHistory(input);
+    console.log('Command History:', commandHistory);
     
     // Add command to history display
     addToHistory({
@@ -81,11 +83,13 @@ const Terminal = () => {
   };
 
   return (
+    <>
     <div className="terminal-container">
       <TerminalHeader />
       
       <div className="terminal-body" onClick={() => inputRef.current?.focus()}>
-        <WelcomeMessage />
+        <WelcomeMessage /> 
+        
         
         {history.map((entry, index) => (
           entry.type === 'command' ? (
@@ -105,6 +109,8 @@ const Terminal = () => {
         />
       </div>
     </div>
+    
+    </>
   );
 };
 
