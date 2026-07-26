@@ -25,9 +25,9 @@ const Terminal = () => {
     navigateDown,
     addCommandToHistory
   } = useTerminal(fileSystem);
-  
-//   const { getNode, isDirectory, getChildren } = useFileSystem(fileSystem);
-  
+
+  //   const { getNode, isDirectory, getChildren } = useFileSystem(fileSystem);
+
   const commands = createCommands(
     fileSystem,
     currentDir,
@@ -36,22 +36,29 @@ const Terminal = () => {
     clearHistory
   );
 
-  const executeCommand = (input) => {
+  const executeCommand = async (input) => {
     const { command, args } = parseCommand(input);
-    
+
     if (!command) return;
-    
+
     addCommandToHistory(input);
-    console.log('Command History:', commandHistory);
-    
-    // Add command to history display
+
     addToHistory({
       type: 'command',
       text: `visitor@portfolio:${currentDir}$ ${input}`
     });
-    
+
     if (commands[command]) {
-      const output = commands[command](args);
+      // Show loading for async commands
+      if (['curl', 'fetch', 'api', 'ping', 'github', 'weather'].includes(command)) {
+        addToHistory({
+          type: 'output',
+          text: '⏳ Executing...'
+        });
+      }
+
+      // Execute command (handle both sync and async)
+      const output = await commands[command](args);
       if (output) {
         addToHistory({
           type: 'output',
@@ -84,32 +91,32 @@ const Terminal = () => {
 
   return (
     <>
-    <div className="terminal-container">
-      <TerminalHeader />
-      
-      <div className="terminal-body" onClick={() => inputRef.current?.focus()}>
-        <WelcomeMessage /> 
-        
-        
-        {history.map((entry, index) => (
-          entry.type === 'command' ? (
-            <div key={index} className="command-line fade-in">
-              <span className="prompt">❯</span> {entry.text}
-            </div>
-          ) : (
-            <Output key={index} text={entry.text} />
-          )
-        ))}
-        
-        <TerminalInput
-          onSubmit={executeCommand}
-          onKeyDown={handleKeyDown}
-          currentDir={currentDir}
-          inputRef={inputRef}
-        />
+      <div className="terminal-container">
+        <TerminalHeader />
+
+        <div className="terminal-body" onClick={() => inputRef.current?.focus()}>
+          <WelcomeMessage />
+
+
+          {history.map((entry, index) => (
+            entry.type === 'command' ? (
+              <div key={index} className="command-line fade-in">
+                <span className="prompt">❯</span> {entry.text}
+              </div>
+            ) : (
+              <Output key={index} text={entry.text} />
+            )
+          ))}
+
+          <TerminalInput
+            onSubmit={executeCommand}
+            onKeyDown={handleKeyDown}
+            currentDir={currentDir}
+            inputRef={inputRef}
+          />
+        </div>
       </div>
-    </div>
-    
+
     </>
   );
 };

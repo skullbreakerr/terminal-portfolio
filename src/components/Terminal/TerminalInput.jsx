@@ -31,7 +31,7 @@ const TerminalInput = ({ onSubmit, onKeyDown, currentDir, inputRef }) => {
         className="terminal-input"
         spellCheck="false"
         autoComplete="off"
-        placeholder="Type a command..."
+        placeholder=""
       />
     </form>
   );
