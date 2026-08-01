@@ -34,7 +34,8 @@ export const createCommands = (fileSystem, currentDir, setCurrentDir, addToHisto
   curl <url> [opts]  - Make an HTTP request
   github [username]  - Fetch a GitHub profile
   weather <city>     - Get current weather
-  
+  mail <message>     - Send me a message (opens your mail app)
+                        optional: mail -from "<name>" <message>
 
 🎮 Fun:
   matrix      - Enter the matrix
@@ -372,7 +373,9 @@ ${JSON.stringify(responseData, null, 2)}
     const body = encodeURIComponent(`From: ${fromName}\n\n${message}`);
     const mailtoLink = `mailto:${to}?subject=${subject}&body=${body}`;
 
-    window.open(mailtoLink, '_blank');
+    const anchor = document.createElement('a');
+    anchor.href = mailtoLink;
+    anchor.click();
 
     return `
 ╔══════════════════════════════════════════╗
