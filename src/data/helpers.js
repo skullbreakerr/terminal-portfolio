@@ -1,5 +1,5 @@
 
-export const bar = (level, width = 20) => {
+const bar = (level, width = 20) => {
   const filled = Math.round((level / 100) * width);
   return '█'.repeat(filled) + '░'.repeat(width - filled);
 };

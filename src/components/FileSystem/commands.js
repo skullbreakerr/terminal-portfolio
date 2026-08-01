@@ -1,5 +1,5 @@
 import { portfolioData } from '../../data/portfolio'; // adjust path as needed
-import { bar, skillLine, formatProject } from '../../data/helpers'; // adjust path as needed
+import { skillLine, formatProject } from '../../data/helpers'; // adjust path as needed
 
 export const createCommands = (fileSystem, currentDir, setCurrentDir, addToHistory, clearHistory) => ({
   help: () => `
