@@ -14,9 +14,11 @@ const TerminalInput = ({ onSubmit, onKeyDown, currentDir, inputRef }) => {
 
   const handleKeyDown = (e) => {
     if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
-      onKeyDown(e);
+      onKeyDown(setInput,e.key);
     }
   };
+
+  
 
   return (
     <form onSubmit={handleSubmit} className="input-form">

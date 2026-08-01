@@ -1,9 +1,29 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 
+const STORAGE_KEY = 'terminal_command_history';
+
+const loadCommandHistory = () => {
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    return stored ? JSON.parse(stored) : [];
+  } catch (err) {
+    console.error('Failed to load command history:', err);
+    return [];
+  }
+};
+
+const saveCommandHistory = (history) => {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
+  } catch (err) {
+    console.error('Failed to save command history:', err);
+  }
+};
+
 export const useTerminal = (fileSystem) => {
   const [history, setHistory] = useState([]);
   const [currentDir, setCurrentDir] = useState('~');
-  const [commandHistory, setCommandHistory] = useState([]);
+  const [commandHistory, setCommandHistory] = useState(loadCommandHistory);
   const [historyIndex, setHistoryIndex] = useState(-1);
   const inputRef = useRef(null);
 
@@ -37,7 +57,17 @@ export const useTerminal = (fileSystem) => {
   }, [historyIndex, commandHistory]);
 
   const addCommandToHistory = useCallback((command) => {
-    setCommandHistory(prev => [...prev, command]);
+    setCommandHistory(prev => {
+      const updated = [...prev, command];
+      saveCommandHistory(updated);
+      return updated;
+    });
+    setHistoryIndex(-1);
+  }, []);
+
+  const clearCommandHistory = useCallback(() => {
+    setCommandHistory([]);
+    saveCommandHistory([]);
     setHistoryIndex(-1);
   }, []);
 
@@ -57,6 +87,7 @@ export const useTerminal = (fileSystem) => {
     commandHistory,
     navigateUp,
     navigateDown,
-    addCommandToHistory
+    addCommandToHistory,
+    clearCommandHistory
   };
 };

@@ -73,20 +73,22 @@ const Terminal = () => {
     }
   };
 
-  const handleKeyDown = (e) => {
-    if (e.key === 'ArrowUp') {
-      e.preventDefault();
+  const handleKeyDown = (setInput,key) => {
+    if (key === 'ArrowUp') {
       const prevCommand = navigateUp();
       if (prevCommand !== null) {
-        e.target.value = prevCommand;
+        setInput(prevVal => prevVal = prevCommand);
       }
-    } else if (e.key === 'ArrowDown') {
-      e.preventDefault();
+      console.log('ArrowUp pressed, previous command:', prevCommand);
+    } else if (key === 'ArrowDown') {
+      // e.preventDefault();
       const nextCommand = navigateDown();
       if (nextCommand !== null) {
-        e.target.value = nextCommand;
+        setInput(prevVal => prevVal = nextCommand);
       }
+      console.log('ArrowDown pressed, next command:', nextCommand);
     }
+    console.log('command History : ', commandHistory);
   };
 
   return (
