@@ -1,3 +1,6 @@
+import { portfolioData } from '../../data/portfolio'; // adjust path as needed
+import { bar, skillLine, formatProject } from '../../data/helpers'; // adjust path as needed
+
 export const createCommands = (fileSystem, currentDir, setCurrentDir, addToHistory, clearHistory) => ({
   help: () => `
 ╔══════════════════════════════════════════╗
@@ -11,21 +14,31 @@ export const createCommands = (fileSystem, currentDir, setCurrentDir, addToHisto
 
 📄 File Operations:
   cat <file>  - View file contents
-  
+
 🛠️ System:
   whoami      - Display user info
   clear       - Clear terminal
   history     - Command history
-  
+  date        - Show current date/time
+  echo <text> - Print text back
+  exit        - Close the terminal
+
 🎯 Quick Access:
-  skills      - View technical skills
-  projects    - Browse projects
-  contact     - Contact information
-  neofetch    - System information
+  skills [category] - View technical skills (backend/frontend/devops/databases)
+  projects [id]      - Browse projects, add an id for details
+  contact            - Contact information
+  neofetch           - System information
+
+🌐 Network:
+  ping <host>        - Check host latency
+  curl <url> [opts]  - Make an HTTP request
+  github [username]  - Fetch a GitHub profile
+  weather <city>     - Get current weather
   
+
 🎮 Fun:
   matrix      - Enter the matrix
-  
+
 Type any command to get started!
   `,
 
@@ -77,14 +90,102 @@ Type any command to get started!
 
   pwd: () => currentDir,
 
-  whoami: () => `
-╔════════════════════════════╗
-║  Backend System Architect  ║
-║  Java | Spring | React     ║
-║  Vue  | Node  | Docker     ║
-╚════════════════════════════╝
-  `,
+  whoami: () => {
+    const { name, role, tagline, summary } = portfolioData.personal;
+    return `
+╔══════════════════════════════════════════╗
+║  ${name.padEnd(41).slice(0, 41)}║
+║  ${role.padEnd(41).slice(0, 41)}║
+╚══════════════════════════════════════════╝
 
+"${tagline}"
+
+${summary}
+  `;
+  },
+
+  skills: (args) => {
+    const { backend, frontend, devops, databases } = portfolioData.skills;
+    const category = args[0]?.toLowerCase();
+    const categories = { backend, frontend, devops, databases };
+
+    if (category && categories[category]) {
+      return `
+╔══════════════════════════════════════════╗
+║  ${category.toUpperCase().padEnd(41)}║
+╚══════════════════════════════════════════╝
+
+${categories[category].map(skillLine).join('\n')}
+      `;
+    }
+
+    if (category) {
+      return `skills: unknown category: ${category}\nAvailable: backend, frontend, devops, databases`;
+    }
+
+    return `
+╔══════════════════════════════════════════╗
+║            TECHNICAL SKILLS               ║
+╚══════════════════════════════════════════╝
+
+🔧 Backend:
+${backend.map(skillLine).join('\n')}
+
+🖥️  Frontend:
+${frontend.map(skillLine).join('\n')}
+
+☁️  DevOps:
+${devops.map(skillLine).join('\n')}
+
+🗄️  Databases:
+${databases.map(skillLine).join('\n')}
+
+Tip: 'skills <category>' to filter, e.g. skills backend
+  `;
+  },
+
+  projects: (args) => {
+    const { projects } = portfolioData;
+
+    if (args[0] !== undefined) {
+      const idOrName = args[0].toLowerCase();
+      const match = projects.find(
+        p => String(p.id) === idOrName || p.name.toLowerCase().includes(idOrName)
+      );
+      if (!match) return `projects: no such project: ${args[0]}\nType 'projects' to list all.`;
+      return formatProject(match);
+    }
+
+    const rows = projects
+      .map(p => `  [${p.id}] 📁 ${p.name.padEnd(28)} ${p.tech.slice(0, 2).join(', ')}`)
+      .join('\n');
+
+    return `
+╔══════════════════════════════════════════╗
+║              MY PROJECTS                 ║
+╚══════════════════════════════════════════╝
+
+${rows}
+
+Type 'projects <id>' for details, e.g:
+  projects ${projects[0].id}
+  `;
+  },
+
+  contact: () => {
+    const { github, linkedin, email } = portfolioData.social;
+    return `
+╔══════════════════════════════════════════╗
+║           CONTACT INFORMATION            ║
+╚══════════════════════════════════════════╝
+
+  🐙 GitHub    ${github}
+  💼 LinkedIn  ${linkedin}
+  📧 Email     ${email}
+
+Feel free to reach out — always open to interesting work.
+  `;
+  },
   clear: () => {
     clearHistory();
     return '';
@@ -171,47 +272,6 @@ ${JSON.stringify(responseData, null, 2)}
       return `curl: Failed to fetch\nError: ${error.message}`;
     }
   },
-
-//   fetch: async (args) => {
-//     return await commands.curl(args);
-//   },
-
-//   api: async (args) => {
-//     if (!args[0]) return 'api: missing endpoint\nUsage: api <endpoint> [method] [data]';
-
-//     const baseURL = 'https://api.github.com'; // Default API base
-//     const endpoint = args[0];
-//     const method = args[1]?.toUpperCase() || 'GET';
-//     let body = null;
-
-//     if (args[2]) {
-//       try {
-//         body = JSON.parse(args.slice(2).join(' '));
-//       } catch {
-//         body = args.slice(2).join(' ');
-//       }
-//     }
-
-//     try {
-//       const response = await fetch(`${baseURL}${endpoint}`, {
-//         method,
-//         headers: { 'Accept': 'application/json' },
-//         body: body ? JSON.stringify(body) : undefined
-//       });
-
-//       const data = await response.json();
-
-//       return `
-// 🌐 API Call: ${method} ${baseURL}${endpoint}
-// 📊 Status: ${response.status}
-
-// ${JSON.stringify(data, null, 2).substring(0, 500)}...
-//     `;
-//     } catch (error) {
-//       return `API Error: ${error.message}`;
-//     }
-//   },
-
   // Test API endpoints
   ping: async (args) => {
     const host = args[0] || 'google.com';
@@ -282,5 +342,49 @@ ${JSON.stringify(responseData, null, 2)}
     } catch (error) {
       return `Weather API Error: ${error.message}`;
     }
-  }
+  },
+
+  // Mail Sender Command
+  mail: (args) => {
+    let raw = args.join(' ');
+    let fromName = 'Anonymous';
+
+    // Extract --from/-from if present, and remove it from the raw string
+    const fromPattern = /(--?from)\s+"([^"]*)"|(--?from)\s+(\S+)/;
+    const fromMatch = raw.match(fromPattern);
+    if (fromMatch) {
+      fromName = fromMatch[2] !== undefined ? fromMatch[2] : fromMatch[4];
+      raw = raw.replace(fromMatch[0], '').trim();
+    }
+
+    // Strip an optional --message/-message flag if someone still includes it,
+    // but it's no longer required
+    raw = raw.replace(/^(--?message|--?msg)\s+/, '');
+
+    const message = raw.replace(/^"|"$/g, '').trim();
+
+    if (!message) {
+      return `mail: missing message\nUsage: mail <your message>\n   or: mail -from "<name>" <your message>`;
+    }
+
+    const to = portfolioData.social.email;
+    const subject = encodeURIComponent(`Portfolio contact from ${fromName}`);
+    const body = encodeURIComponent(`From: ${fromName}\n\n${message}`);
+    const mailtoLink = `mailto:${to}?subject=${subject}&body=${body}`;
+
+    window.open(mailtoLink, '_blank');
+
+    return `
+╔══════════════════════════════════════════╗
+║           OPENING MAIL CLIENT            ║
+╚══════════════════════════════════════════╝
+
+👤 From:    ${fromName}
+📝 Message: "${message}"
+📧 To:      ${to}
+
+Your default email app should now be open.
+Didn't pop up? Email me directly at ${to}
+    `;
+  },
 });
