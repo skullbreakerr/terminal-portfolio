@@ -211,6 +211,11 @@ Feel free to reach out — always open to interesting work.
   exit: () => {
     setTimeout(() => {
       window.location.reload();
+      // console.time('Closing connection...');
+      setTimeout(()=>{
+        window.close();
+        // console.timeEnd('Closing connection...');
+      },200);
     }, 1000);
     return 'Closing connection... Goodbye! 👋';
   },
